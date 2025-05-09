@@ -9,17 +9,20 @@ namespace WinForms
 {
     internal class Acciones
     {
-        private List<Alumno> alumnolist = new List<Alumno>
-        {
-            new Alumno("Ana",21,"LADD",112609,DateTime.Today),
-            new Alumno("Araceli",20,"LADD",112608,DateTime.Today),
-            new Alumno("Jostin",21,"LADD",112458,DateTime.Today),
-            new Alumno("Adan",29,"LADD",112830,DateTime.Today)
-        };
+        private List<Alumno> alumnolist = new List<Alumno>();
+        Correo correo= new Correo();
 
         public List<Alumno> Mostrar()
         {
-            return alumnolist; 
+            try
+            {
+                return alumnolist;
+            }
+            catch (Exception ex)
+            {
+                correo.EnviarCorreo(ex.ToString());
+                throw;
+            }
         }
 
         public bool ExportaraExcel()
@@ -30,7 +33,7 @@ namespace WinForms
                 var worksheet = workbook.Worksheets.Add("Alumnos");
 
                 // Encabezados
-                worksheet.Cell(1, 1).Value = "Nombre";
+                worksheet.Cell(1, 0).Value = "Nombre";
                 worksheet.Cell(1, 2).Value = "Edad";
                 worksheet.Cell(1, 3).Value = "Carrera";
                 worksheet.Cell(1, 4).Value = "Matricula";
@@ -54,8 +57,9 @@ namespace WinForms
                 workbook.SaveAs(filePath);
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                correo.EnviarCorreo(ex.ToString());
                 return false;
             }
         }
@@ -103,8 +107,9 @@ namespace WinForms
 
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                correo.EnviarCorreo(ex.ToString());
                 return false;
             }
         }
